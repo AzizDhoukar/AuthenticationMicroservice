@@ -1,10 +1,13 @@
 package org.example.authentification.payment.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.authentification.authentification.dtos.RegisterUserDto;
+import org.example.authentification.authentification.models.User;
 import org.example.authentification.payment.Exeptions.WalletNotFound;
 import org.example.authentification.payment.models.Transaction;
 import org.example.authentification.payment.models.Wallet;
 import org.example.authentification.payment.repositories.WalletRepository;
+import org.example.authentification.payment.requests.AddWalletRequest;
 import org.example.authentification.payment.requests.BankToWalletTransferRequest;
 import org.example.authentification.payment.requests.TransactionRequest;
 import org.example.authentification.payment.services.SellerService;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,6 +30,17 @@ public class WalletController {
 
     private final SellerService sellerServiceImpl;
 
+    @PostMapping
+    public ResponseEntity<Wallet> add(@RequestBody AddWalletRequest request) {
+        Wallet newWallet = walletService.addWallet(request);
+        return ResponseEntity.ok(newWallet);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Wallet>> getAll(){
+        List<Wallet> wallets = walletRepository.findAll();
+        return new ResponseEntity<>(wallets, HttpStatus.OK);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Wallet> viewWallet(@PathVariable("id") Integer uniqueId) throws WalletNotFound {

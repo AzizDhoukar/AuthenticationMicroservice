@@ -1,5 +1,8 @@
 package org.example.authentification.payment.services;
 
+import lombok.RequiredArgsConstructor;
+import org.example.authentification.authentification.models.User;
+import org.example.authentification.authentification.repositoies.UserRepository;
 import org.example.authentification.payment.Exeptions.BankAccountNotFound;
 import org.example.authentification.payment.Exeptions.InsufficientBalanceException;
 import org.example.authentification.payment.Exeptions.SellerNotFound;
@@ -11,26 +14,21 @@ import org.example.authentification.payment.repositories.BankAccountRepository;
 import org.example.authentification.payment.repositories.TransactionRepository;
 import org.example.authentification.payment.repositories.SellerRepositoryNew;
 import org.example.authentification.payment.repositories.WalletRepository;
+import org.example.authentification.payment.requests.AddWalletRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WalletService {
     private final SellerService sellerService;
     private final SellerRepositoryNew sellerRepositoryNew;
     private final TransactionRepository transactionRepository;
     private final BankAccountRepository bankAccountRepository;
     private final WalletRepository walletRepository;
-
-    public WalletService(SellerService sellerService, SellerRepositoryNew sellerRepositoryNew, TransactionRepository transactionRepository, BankAccountRepository bankAccountRepository, WalletRepository walletRepository) {
-        this.sellerService = sellerService;
-        this.sellerRepositoryNew = sellerRepositoryNew;
-        this.transactionRepository = transactionRepository;
-        this.bankAccountRepository = bankAccountRepository;
-        this.walletRepository = walletRepository;
-    }
+    private final UserRepository userRepository;
 
     public Transaction fundTransfer(String sourceMobileNo, String targetMobileNo, Double amount, String uniqueId) throws SellerNotFound {
         Optional<Seller> user = sellerRepositoryNew.findByMobileNo(sourceMobileNo);
@@ -77,5 +75,14 @@ public class WalletService {
 
 
 
+    }
+
+    public Wallet addWallet(AddWalletRequest request) throws SellerNotFound{
+        Wallet wallet = new Wallet();
+        Optional<User> user = userRepository.findById(request.getSellerId());
+        if (user.isEmpty()){throw new SellerNotFound("no seller with id:"+request.getSellerId());}
+        wallet.setUser(user.get());
+        walletRepository.save(wallet);
+        return wallet;
     }
 }

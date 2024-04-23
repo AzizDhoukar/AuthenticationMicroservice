@@ -21,7 +21,6 @@ public class Seller {
     @NotNull
     private String userName;
 
-
     @NotNull
     private String mobileNo;
 
