@@ -13,22 +13,13 @@ import org.jetbrains.annotations.NotNull;
 @Entity
 @Table
 @Getter
-public class Seller {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
 
     @NotNull
-    private String userName;
-
-    @NotNull
     private String mobileNo;
-
-    @NotNull
-    private String password;
-
-    @NotNull
-    private String email;
 
     @JsonIgnore
     @OneToOne(optional = false, cascade = CascadeType.ALL)

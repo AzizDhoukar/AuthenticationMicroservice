@@ -1,8 +1,6 @@
 package org.example.authentification.payment.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.authentification.authentification.dtos.RegisterUserDto;
-import org.example.authentification.authentification.models.User;
 import org.example.authentification.payment.Exeptions.WalletNotFound;
 import org.example.authentification.payment.models.Transaction;
 import org.example.authentification.payment.models.Wallet;
@@ -10,7 +8,7 @@ import org.example.authentification.payment.repositories.WalletRepository;
 import org.example.authentification.payment.requests.AddWalletRequest;
 import org.example.authentification.payment.requests.BankToWalletTransferRequest;
 import org.example.authentification.payment.requests.TransactionRequest;
-import org.example.authentification.payment.services.SellerService;
+import org.example.authentification.payment.services.UserService;
 import org.example.authentification.payment.services.WalletService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +26,7 @@ public class WalletController {
 
     private final WalletRepository walletRepository;
 
-    private final SellerService sellerServiceImpl;
+    private final UserService userServiceImpl;
 
     @PostMapping
     public ResponseEntity<Wallet> add(@RequestBody AddWalletRequest request) {

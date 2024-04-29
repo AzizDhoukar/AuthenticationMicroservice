@@ -3,6 +3,7 @@ package org.example.authentification.payment.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table
+@Data
 public class Transaction {
 
     @Id
@@ -31,10 +33,20 @@ public class Transaction {
     @ManyToOne
     private Wallet  wallet;
 
-    public Transaction( Wallet wallet, double amount, LocalDateTime transactionDate, String description) {
-        this.transactionDate = transactionDate;
+
+    @Enumerated(EnumType.STRING) // Store enum as string in the database
+    private TransactionStatus status;
+
+    public Transaction( Wallet wallet, double amount, String description, TransactionStatus status) {
         this.amount = amount;
         this.description = description;
         this.wallet = wallet;
+        this.status = status;
+    }
+
+    public enum TransactionStatus {
+        SUCCEED,
+        FAILED,
+        PENDING
     }
 }
