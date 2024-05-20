@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: auth
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    image: azizdhoukar/docker-test:latest
+    container_name: spring_app_container
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: auth
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
