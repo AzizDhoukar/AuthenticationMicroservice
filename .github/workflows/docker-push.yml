@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Publish Docker image
+    #if: github.ref == 'refs/heads/main'  # Only run this step for pushes to the main branch
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: azizdhoukar/microserivece:latest  # Replace with your Docker Hub username and image name
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
